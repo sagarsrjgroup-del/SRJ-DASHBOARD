@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRJ Group — Operations Command Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM
+═══════════════════════════════════════════ */
+:root {
+  --bg: #f0f2f5;
+  --surface: #ffffff;
+  --surface2: #f7f8fa;
+  --surface3: #eef0f4;
+  --border: #e2e5eb;
+  --border2: #d0d4dc;
+  --ink: #0f1923;
+  --ink2: #3d4a5c;
+  --ink3: #7a8799;
+  --ink4: #b0b8c4;
+  --accent: #0a5af5;
+  --accent-light: #e8f0fe;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --teal: #0d9488;
+  --teal-light: #ccfbf1;
+  --violet: #7c3aed;
+  --violet-light: #ede9fe;
+  --orange: #ea580c;
+  --orange-light: #ffedd5;
+
+  --sidebar-w: 220px;
+  --topbar-h: 56px;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1), 0 12px 40px rgba(0,0,0,0.06);
+
+  --font-head: 'Familjen Grotesk', sans-serif;
+  --font-body: 'Instrument Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:14px; }
+body { background:var(--bg); color:var(--ink); font-family:var(--font-body); min-height:100vh; overflow-x:hidden; }
+
+/* ═══ LAYOUT ═══ */
+.layout { display:flex; min-height:100vh; }
+
+/* ═══ SIDEBAR ═══ */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--ink);
+  height: 100vh;
+  position: fixed;
+  left: 0; top: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.sidebar-brand {
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.brand-logo {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.brand-logo span { color: #4a9eff; }
+.brand-tagline {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+}
+
+.sidebar-section-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  padding: 16px 18px 6px;
+  font-family: var(--font-head);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  border-left: 2px solid transparent;
+  margin: 1px 0;
+}
+.nav-item:hover { background: rgba(255,255,255,0.06); }
+.nav-item.active {
+  background: rgba(74,158,255,0.12);
+  border-left-color: #4a9eff;
+}
+.nav-item.active .nav-label { color: #fff; }
+.nav-item.active .nav-icon { opacity: 1; color: #4a9eff; }
+
+.nav-icon {
+  font-size: 15px;
+  width: 20px;
+  text-align: center;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.nav-label {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  font-weight: 500;
+  font-family: var(--font-body);
+  transition: color 0.15s;
+}
+.nav-badge {
+  margin-left: auto;
+  background: var(--red);
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+}
+.nav-badge.green { background: var(--green); }
+.nav-badge.amber { background: var(--amber); }
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 16px 18px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.user-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4a9eff, #7c3aed);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: white;
+  font-family: var(--font-head);
+}
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-size: 12px; color: rgba(255,255,255,0.8); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 10px; color: rgba(255,255,255,0.35); }
+
+/* ═══ MAIN ═══ */
+.main-area {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ═══ TOPBAR ═══ */
+.topbar {
+  height: var(--topbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topbar-title { font-family: var(--font-head); font-weight: 700; font-size: 16px; color: var(--ink); }
+.topbar-sub { font-size: 12px; color: var(--ink3); margin-left: 6px; }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+.topbar-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--ink2);
+}
+.topbar-stat .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+.btn-new {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+}
+.btn-new:hover { background: #0848d4; transform: translateY(-1px); }
+
+/* ═══ CONTENT ═══ */
+.content { padding: 24px 28px; flex: 1; }
+.page { display: none; }
+.page.active { display: block; animation: fadeSlide 0.2s ease; }
+
+@keyframes fadeSlide { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+/* ═══ STATS ROW ═══ */
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s;
+}
+.kpi:hover { box-shadow: var(--shadow-md); }
+.kpi-label { font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; font-family: var(--font-head); }
+.kpi-value { font-family: var(--font-head); font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: -1px; line-height: 1; }
+.kpi-change { font-size: 11px; color: var(--ink3); margin-top: 4px; }
+.kpi-change.up { color: var(--green); }
+.kpi-change.down { color: var(--red); }
+.kpi-change.warn { color: var(--amber); }
+.kpi-icon { font-size: 20px; margin-bottom: 8px; }
+
+/* ═══ GRID LAYOUTS ═══ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-6040 { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; margin-bottom: 16px; }
+.grid-4060 { display: grid; grid-template-columns: 2fr 3fr; gap: 16px; margin-bottom: 16px; }
+.col-span-2 { grid-column: span 2; }
+
+/* ═══ CARDS ═══ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.card-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px;
+}
+
+.card-title { font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--ink); }
+.card-sub { font-size: 11px; color: var(--ink3); }
+.card-body { padding: 16px 18px; }
+.card-body-0 { padding: 0; }
+
+/* ═══ BADGES ═══ */
+.badge {
+  display: inline-flex; align-items: center;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.3px;
+  padding: 3px 8px; border-radius: 4px;
+  font-family: var(--font-head);
+  white-space: nowrap;
+}
+.badge-blue { background: var(--accent-light); color: var(--accent); }
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-amber { background: var(--amber-light); color: var(--amber); }
+.badge-red { background: var(--red-light); color: var(--red); }
+.badge-teal { background: var(--teal-light); color: var(--teal); }
+.badge-violet { background: var(--violet-light); color: var(--violet); }
+.badge-orange { background: var(--orange-light); color: var(--orange); }
+.badge-grey { background: var(--surface3); color: var(--ink3); }
+
+/* ═══ TABLES ═══ */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead th {
+  text-align: left; padding: 10px 14px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--ink3);
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-head); white-space: nowrap;
+}
+tbody td {
+  padding: 11px 14px; border-bottom: 1px solid var(--border);
+  color: var(--ink2); vertical-align: middle;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--surface2); }
+td.strong { color: var(--ink); font-weight: 600; }
+td.mono { font-family: var(--font-mono); font-size: 11px; }
+
+/* ═══ PROGRESS ═══ */
+.prog-wrap { display: flex; align-items: center; gap: 8px; }
+.prog-bar { flex: 1; height: 6px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.prog-label { font-family: var(--font-mono); font-size: 10px; color: var(--ink3); width: 28px; text-align: right; flex-shrink: 0; }
+
+/* ═══ PIPELINE ═══ */
+.pipeline { display: flex; gap: 12px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+.pipeline-stage { flex: 1; min-width: 180px; }
+.pipeline-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  font-size: 11px; font-weight: 700; font-family: var(--font-head);
+  letter-spacing: 0.5px; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.pipeline-cards { display: flex; flex-direction: column; gap: 6px; min-height: 80px; }
+.pipeline-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: var(--shadow);
+}
+.pipeline-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.pipeline-card-title { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.pipeline-card-meta { font-size: 10px; color: var(--ink3); }
+.pipeline-card-value { font-family: var(--font-mono); font-size: 11px; color: var(--accent); font-weight: 500; margin-top: 4px; }
+
+/* ═══ GANTT ═══ */
+.gantt-wrap { overflow-x: auto; }
+.gantt-table { min-width: 800px; }
+.gantt-row { display: flex; align-items: center; border-bottom: 1px solid var(--border); min-height: 38px; }
+.gantt-row:last-child { border-bottom: none; }
+.gantt-label { width: 200px; flex-shrink: 0; padding: 8px 14px; font-size: 12px; color: var(--ink2); border-right: 1px solid var(--border); }
+.gantt-label.head { font-weight: 700; font-family: var(--font-head); font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.5px; background: var(--surface2); }
+.gantt-timeline { flex: 1; padding: 6px 8px; position: relative; min-height: 38px; display: flex; align-items: center; }
+.gantt-months { display: flex; width: 100%; }
+.gantt-month { flex: 1; font-size: 9px; color: var(--ink4); font-family: var(--font-mono); text-align: center; padding-bottom: 4px; border-right: 1px solid var(--border); }
+.gantt-bar-wrap { position: absolute; left: 0; right: 0; padding: 0 8px; }
+.gantt-bar {
+  height: 20px; border-radius: 4px;
+  display: flex; align-items: center; padding: 0 8px;
+  font-size: 10px; font-weight: 600; color: white;
+  font-family: var(--font-head);
+  position: relative;
+}
+.gantt-bar.complete { opacity: 0.7; }
+.gantt-bar.active { box-shadow: 0 0 0 2px rgba(0,0,0,0.15); }
+
+/* ═══ FORM ELEMENTS ═══ */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-row.full { grid-template-columns: 1fr; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink3); font-family: var(--font-head); }
+.form-input, .form-select, .form-textarea {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 8px 11px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(10,90,245,0.08);
+}
+.form-textarea { resize: vertical; min-height: 70px; }
+
+/* ═══ BUTTONS ═══ */
+.btn {
+  border: none; border-radius: var(--radius-sm);
+  font-family: var(--font-head); font-weight: 600; font-size: 12px;
+  cursor: pointer; transition: all 0.15s;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 8px 16px; letter-spacing: 0.2px;
+}
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: #0848d4; }
+.btn-secondary { background: var(--surface2); color: var(--ink2); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--surface3); }
+.btn-danger { background: var(--red-light); color: var(--red); }
+.btn-success { background: var(--green-light); color: var(--green); }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+
+/* ═══ MISC ═══ */
+.section-divider { height: 1px; background: var(--border); margin: 20px 0; }
+.flex-row { display: flex; align-items: center; gap: 8px; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.text-muted { color: var(--ink3); }
+.text-small { font-size: 11px; }
+.mono { font-family: var(--font-mono); }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+
+.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.dot-green { background: var(--green); }
+.dot-amber { background: var(--amber); }
+.dot-red { background: var(--red); }
+.dot-blue { background: var(--accent); }
+.dot-grey { background: var(--ink4); }
+
+.tag {
+  display: inline-block; font-size: 10px; padding: 2px 7px;
+  border-radius: 3px; font-weight: 600; letter-spacing: 0.3px;
+}
+
+.divider-label {
+  display: flex; align-items: center; gap: 12px;
+  margin: 20px 0 14px; color: var(--ink3);
+}
+.divider-label span { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; font-family: var(--font-head); white-space: nowrap; }
+.divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--ink3); }
+.empty-state .icon { font-size: 28px; margin-bottom: 8px; }
+.empty-state p { font-size: 12px; }
+
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--ink); color: white;
+  border-radius: var(--radius); padding: 12px 20px;
+  font-size: 13px; box-shadow: var(--shadow-md); z-index: 9999;
+  transform: translateY(80px); opacity: 0;
+  transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+  display: flex; align-items: center; gap: 8px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-icon { font-size: 16px; }
+
+/* ═══ FLOW DIAGRAM ═══ */
+.flow-steps { display: flex; align-items: center; gap: 0; flex-wrap: nowrap; overflow-x: auto; margin-bottom: 16px; }
+.flow-step {
+  display: flex; flex-direction: column; align-items: center;
+  min-width: 100px; padding: 12px 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); flex: 1;
+  text-align: center; cursor: pointer; transition: all 0.15s;
+}
+.flow-step:hover { border-color: var(--accent); }
+.flow-step.active { border-color: var(--accent); background: var(--accent-light); }
+.flow-arrow { font-size: 14px; color: var(--ink4); flex-shrink: 0; padding: 0 4px; }
+.flow-icon { font-size: 20px; margin-bottom: 4px; }
+.flow-label { font-size: 10px; font-weight: 700; color: var(--ink); font-family: var(--font-head); letter-spacing: 0.3px; }
+.flow-sub { font-size: 9px; color: var(--ink3); margin-top: 2px; }
+
+/* ═══ ACTIVITY FEED ═══ */
+.activity-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.activity-item:last-child { border-bottom: none; }
+.activity-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.activity-text { font-size: 12px; color: var(--ink2); line-height: 1.4; }
+.activity-time { font-size: 10px; color: var(--ink4); margin-top: 2px; font-family: var(--font-mono); }
+
+/* ═══ PROJECT CARD ═══ */
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all 0.18s;
+  box-shadow: var(--shadow);
+  border-top: 3px solid var(--border);
+}
+.project-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.project-card.fire { border-top-color: var(--red); }
+.project-card.hvac { border-top-color: var(--teal); }
+.project-card.piping { border-top-color: var(--accent); }
+.project-card.structural { border-top-color: var(--amber); }
+
+.pc-name { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.pc-client { font-size: 11px; color: var(--ink3); margin-bottom: 10px; }
+.pc-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.pc-stat { background: var(--surface2); border-radius: 6px; padding: 7px 10px; }
+.pc-stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink4); font-family: var(--font-head); }
+.pc-stat-val { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--ink); margin-top: 2px; }
+
+/* ═══ CHECKLIST ═══ */
+.checklist-item { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+.checklist-item:last-child { border-bottom: none; }
+.check-box {
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 2px solid var(--border2); cursor: pointer;
+  flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.check-box.done { background: var(--green); border-color: var(--green); color: white; font-size: 9px; }
+.check-text { flex: 1; color: var(--ink2); }
+.check-text.done { text-decoration: line-through; color: var(--ink4); }
+.check-meta { font-size: 10px; color: var(--ink4); }
+
+/* ═══ MODAL ═══ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 500; display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 12px;
+  box-shadow: var(--shadow-md); width: 100%; max-width: 540px;
+  max-height: 85vh; overflow-y: auto;
+  animation: modalIn 0.2s ease;
+}
+@keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-head { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.modal-title { font-family: var(--font-head); font-size: 15px; font-weight: 700; }
+.modal-close { border: none; background: none; font-size: 18px; cursor: pointer; color: var(--ink3); line-height: 1; }
+.modal-body { padding: 20px 22px; }
+.modal-foot { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ═══ TABS ═══ */
+.sub-tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.sub-tab { padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--ink3); border-bottom: 2px solid transparent; transition: all 0.15s; font-family: var(--font-head); }
+.sub-tab:hover { color: var(--ink); }
+.sub-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ═══ INVOICE ═══ */
+.invoice-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); gap: 12px; }
+.invoice-item:last-child { border-bottom: none; }
+.inv-main { flex: 1; }
+.inv-id { font-family: var(--font-mono); font-size: 11px; color: var(--ink3); }
+.inv-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.inv-date { font-size: 10px; color: var(--ink4); margin-top: 2px; }
+.inv-amount { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--ink); }
+
+/* ═══ RISK MATRIX ═══ */
+.risk-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.risk-item:last-child { border-bottom: none; }
+.risk-level { font-size: 9px; font-weight: 700; padding: 3px 7px; border-radius: 3px; letter-spacing: 0.5px; text-transform: uppercase; font-family: var(--font-head); white-space: nowrap; flex-shrink: 0; }
+.risk-text { font-size: 12px; color: var(--ink2); }
+.risk-owner { font-size: 10px; color: var(--ink3); margin-top: 2px; }
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 1100px) {
+  .grid-2, .grid-6040, .grid-4060 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .sidebar { width: 56px; }
+  .nav-label, .brand-tagline, .sidebar-section-label, .sidebar-bottom .user-info { display: none; }
+  .main-area { margin-left: 56px; }
+  .brand-logo { font-size: 14px; }
+  .content { padding: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">SRJ <span>Group</span></div>
+    <div class="brand-tagline">Operations Centre</div>
+  </div>
+
+  <div class="sidebar-section-label">Core Modules</div>
+  <div class="nav-item active" onclick="goto('home',this)"><span class="nav-icon">⬡</span><span class="nav-label">Command Centre</span></div>
+  <div class="nav-item" onclick="goto('sales',this)"><span class="nav-icon">📈</span><span class="nav-label">Sales & Marketing</span><span class="nav-badge amber">3</span></div>
+  <div class="nav-item" onclick="goto('projects',this)"><span class="nav-icon">🏗</span><span class="nav-label">Project Overview</span><span class="nav-badge green">6</span></div>
+  <div class="nav-item" onclick="goto('procurement',this)"><span class="nav-icon">📦</span><span class="nav-label">Procurement</span><span class="nav-badge">2</span></div>
+  <div class="nav-item" onclick="goto('hr',this)"><span class="nav-icon">👥</span><span class="nav-label">Human Resources</span></div>
+  <div class="nav-item" onclick="goto('finance',this)"><span class="nav-icon">₹</span><span class="nav-label">Finance</span><span class="nav-badge">5</span></div>
+
+  <div class="sidebar-section-label">Project Management</div>
+  <div class="nav-item" onclick="goto('pm-a',this)"><span class="nav-icon">🔴</span><span class="nav-label">Nestlé — Fire</span></div>
+  <div class="nav-item" onclick="goto('pm-b',this)"><span class="nav-icon">🔵</span><span class="nav-label">Bosch — Piping</span></div>
+  <div class="nav-item" onclick="goto('pm-c',this)"><span class="nav-icon">🟡</span><span class="nav-label">Toyota — HVAC</span></div>
+
+  <div class="sidebar-bottom">
+    <div class="user-pill">
+      <div class="user-avatar">PS</div>
+      <div class="user-info">
+        <div class="user-name">Prakash S.</div>
+        <div class="user-role">CEO / Owner</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main-area">
+
+  <!-- TOPBAR -->
+  <div class="topbar" id="topbar">
+    <div>
+      <span class="topbar-title" id="topbar-title">Command Centre</span>
+      <span class="topbar-sub" id="topbar-sub">— SRJ Group, Bengaluru</span>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-stat"><span class="dot status-dot dot-green"></span>6 Active Projects</div>
+      <div class="topbar-stat"><span class="dot status-dot dot-amber"></span>2 Delayed</div>
+      <button class="btn-new" onclick="openModal('new-lead')">+ New Entry</button>
+    </div>
+  </div>
+
+  <!-- ═════ CONTENT ═════ -->
+  <div class="content">
+
+    <!-- ══════════════════════════════
+         HOME / COMMAND CENTRE
+    ═══════════════════════════════ -->
+    <div class="page active" id="page-home">
+      <!-- User flow indicator -->
+      <div class="flow-steps mb-20">
+        <div class="flow-step active"><div class="flow-icon">🎯</div><div class="flow-label">Lead</div><div class="flow-sub">Captured</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-icon">📋</div><div class="flow-label">Qualified</div><div class="flow-sub">Assessed</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-icon">📄</div><div class="flow-label">Proposal</div><div class="flow-sub">Submitted</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-icon">🤝</div><div class="flow-label">Closed</div><div class="flow-sub">Won</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-icon">⚙️</div><div class="flow-label">Project</div><div class="flow-sub">Created</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-icon">🔧</div><div class="flow-label">Execution</div><div class="flow-sub">On-site</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-icon">✅</div><div class="flow-label">Handover</div><div class="flow-sub">Invoiced</div></div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Active Projects</div><div class="kpi-value">6</div><div class="kpi-change up">↑ 2 from last quarter</div></div>
+        <div class="kpi"><div class="kpi-label">Total Contract Value</div><div class="kpi-value" style="font-size:20px">₹4.2Cr</div><div class="kpi-change up">↑ ₹60L this month</div></div>
+        <div class="kpi"><div class="kpi-label">Outstanding</div><div class="kpi-value" style="font-size:20px">₹78L</div><div class="kpi-change down">↑ Needs follow-up</div></div>
+        <div class="kpi"><div class="kpi-label">Open Leads</div><div class="kpi-value">11</div><div class="kpi-change warn">3 proposals pending</div></div>
+        <div class="kpi"><div class="kpi-label">On-site Workers</div><div class="kpi-value">84</div><div class="kpi-change">Across 6 sites</div></div>
+        <div class="kpi"><div class="kpi-label">Delayed Tasks</div><div class="kpi-value" style="color:var(--red)">7</div><div class="kpi-change down">Requires attention</div></div>
+      </div>
+
+      <div class="grid-6040">
+        <!-- Projects summary -->
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Active Project Status</div><div class="card-sub">Budget vs. Progress</div></div>
+            <button class="btn btn-sm btn-secondary" onclick="goto('projects',null)">View All →</button>
+          </div>
+          <div class="card-body-0">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Project</th><th>Type</th><th>Status</th><th>Progress</th><th>Budget</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td class="strong">Nestlé Fire Protection</td>
+                    <td><span class="badge badge-red">Fire</span></td>
+                    <td><span class="badge badge-green">On Track</span></td>
+                    <td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:72%;background:var(--green)"></div></div><span class="prog-label">72%</span></div></td>
+                    <td class="mono">₹85L</td>
+                  </tr>
+                  <tr>
+                    <td class="strong">Bosch BGSW Piping</td>
+                    <td><span class="badge badge-blue">Piping</span></td>
+                    <td><span class="badge badge-amber">Delayed</span></td>
+                    <td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:45%;background:var(--amber)"></div></div><span class="prog-label">45%</span></div></td>
+                    <td class="mono">₹1.2Cr</td>
+                  </tr>
+                  <tr>
+                    <td class="strong">Toyota HVAC</td>
+                    <td><span class="badge badge-teal">HVAC</span></td>
+                    <td><span class="badge badge-green">On Track</span></td>
+                    <td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:88%;background:var(--green)"></div></div><span class="prog-label">88%</span></div></td>
+                    <td class="mono">₹62L</td>
+                  </tr>
+                  <tr>
+                    <td class="strong">GE Structural</td>
+                    <td><span class="badge badge-amber">Structural</span></td>
+                    <td><span class="badge badge-red">Critical</span></td>
+                    <td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:33%;background:var(--red)"></div></div><span class="prog-label">33%</span></div></td>
+                    <td class="mono">₹95L</td>
+                  </tr>
+                  <tr>
+                    <td class="strong">Bosch BID Fire</td>
+                    <td><span class="badge badge-red">Fire</span></td>
+                    <td><span class="badge badge-green">On Track</span></td>
+                    <td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:60%;background:var(--green)"></div></div><span class="prog-label">60%</span></div></td>
+                    <td class="mono">₹78L</td>
+                  </tr>
+                  <tr>
+                    <td class="strong">Bosch NHP HVAC</td>
+                    <td><span class="badge badge-teal">HVAC</span></td>
+                    <td><span class="badge badge-amber">Delayed</span></td>
+                    <td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:55%;background:var(--amber)"></div></div><span class="prog-label">55%</span></div></td>
+                    <td class="mono">₹1.0Cr</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity + Alerts -->
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card">
+            <div class="card-head"><div class="card-title">⚠️ Alerts</div></div>
+            <div class="card-body" style="padding:0 18px">
+              <div class="activity-item">
+                <div class="activity-dot dot-red"></div>
+                <div><div class="activity-text"><strong>GE Structural</strong> — 3 tasks behind schedule. Supervisor review needed.</div><div class="activity-time">Today, 09:14</div></div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot dot-amber"></div>
+                <div><div class="activity-text"><strong>MS Pipe delivery</strong> (Bosch BGSW) pending 4 days. Vendor follow-up required.</div><div class="activity-time">Yesterday</div></div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot dot-amber"></div>
+                <div><div class="activity-text"><strong>₹28L invoice</strong> from Nestlé overdue by 12 days.</div><div class="activity-time">Mar 14</div></div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot dot-blue"></div>
+                <div><div class="activity-text"><strong>New lead</strong> — Infosys, fire suppression system, ₹45L potential.</div><div class="activity-time">Mar 25</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Outstanding Receivables</div></div>
+            <div class="card-body">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+                <span style="font-size:28px;font-family:var(--font-head);font-weight:700;color:var(--red)">₹78,40,000</span>
+                <span class="badge badge-red">5 invoices</span>
+              </div>
+              <div class="prog-wrap"><div class="prog-bar" style="height:8px"><div class="prog-fill" style="width:68%;background:var(--green);height:8px"></div></div><span class="prog-label mono" style="font-size:11px">68%</span></div>
+              <div style="font-size:11px;color:var(--ink3);margin-top:6px">₹1.67Cr received of ₹2.45Cr total invoiced</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom row -->
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Lead Pipeline</div><button class="btn btn-sm btn-secondary" onclick="goto('sales',null)">Open →</button></div>
+          <div class="card-body" style="padding:0 18px">
+            <div class="activity-item"><div class="activity-dot dot-blue"></div><div><div class="activity-text">Infosys — Fire Suppression</div><div class="activity-time">New · ₹45L</div></div></div>
+            <div class="activity-item"><div class="activity-dot dot-amber"></div><div><div class="activity-text">Wipro Campus — HVAC</div><div class="activity-time">Proposal Sent · ₹38L</div></div></div>
+            <div class="activity-item"><div class="activity-dot dot-green"></div><div><div class="activity-text">Tata Motors — Piping</div><div class="activity-time">Negotiation · ₹1.1Cr</div></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">Procurement Alerts</div><button class="btn btn-sm btn-secondary" onclick="goto('procurement',null)">Open →</button></div>
+          <div class="card-body" style="padding:0 18px">
+            <div class="activity-item"><div class="activity-dot dot-red"></div><div><div class="activity-text">MS Pipe 6" — Low stock (GE site)</div><div class="activity-time">Reorder needed</div></div></div>
+            <div class="activity-item"><div class="activity-dot dot-amber"></div><div><div class="activity-text">Sprinkler heads — Delivery delayed</div><div class="activity-time">Bosch BID</div></div></div>
+            <div class="activity-item"><div class="activity-dot dot-green"></div><div><div class="activity-text">PO #1042 approved — ₹3.8L</div><div class="activity-time">Today</div></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">HR Snapshot</div><button class="btn btn-sm btn-secondary" onclick="goto('hr',null)">Open →</button></div>
+          <div class="card-body" style="padding:0 18px">
+            <div class="activity-item"><div class="activity-dot dot-green"></div><div><div class="activity-text">84 workers on-site today</div><div class="activity-time">Attendance marked</div></div></div>
+            <div class="activity-item"><div class="activity-dot dot-red"></div><div><div class="activity-text">6 roles unfilled across sites</div><div class="activity-time">Urgent — GE & Bosch NHP</div></div></div>
+            <div class="activity-item"><div class="activity-dot dot-amber"></div><div><div class="activity-text">Payroll due in 4 days</div><div class="activity-time">Mar 31</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         SALES & MARKETING
+    ═══════════════════════════════ -->
+    <div class="page" id="page-sales">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Total Leads</div><div class="kpi-value">11</div></div>
+        <div class="kpi"><div class="kpi-label">Proposals Sent</div><div class="kpi-value">4</div><div class="kpi-change">₹2.1Cr value</div></div>
+        <div class="kpi"><div class="kpi-label">Conversion Rate</div><div class="kpi-value">38%</div><div class="kpi-change up">↑ 6% vs last qtr</div></div>
+        <div class="kpi"><div class="kpi-label">Won This Year</div><div class="kpi-value">₹4.2Cr</div><div class="kpi-change up">↑ 22%</div></div>
+        <div class="kpi"><div class="kpi-label">Avg. Deal Size</div><div class="kpi-value" style="font-size:20px">₹70L</div></div>
+      </div>
+
+      <!-- Pipeline -->
+      <div class="divider-label"><span>Lead Pipeline</span></div>
+      <div class="pipeline">
+        <div class="pipeline-stage">
+          <div class="pipeline-head" style="background:var(--surface2);color:var(--ink3)">New <span class="badge badge-grey">4</span></div>
+          <div class="pipeline-cards">
+            <div class="pipeline-card"><div class="pipeline-card-title">Infosys — Fire Suppression</div><div class="pipeline-card-meta">Bengaluru · Industrial</div><div class="pipeline-card-value">₹45L</div></div>
+            <div class="pipeline-card"><div class="pipeline-card-title">ABB — Structural Fab</div><div class="pipeline-card-meta">Pune · Heavy Eng.</div><div class="pipeline-card-value">₹90L</div></div>
+            <div class="pipeline-card"><div class="pipeline-card-title">Siemens — HVAC</div><div class="pipeline-card-meta">Chennai · Commercial</div><div class="pipeline-card-value">₹28L</div></div>
+            <div class="pipeline-card"><div class="pipeline-card-title">Mahindra — Piping</div><div class="pipeline-card-meta">Bengaluru · Auto</div><div class="pipeline-card-value">₹60L</div></div>
+          </div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="pipeline-head" style="background:var(--accent-light);color:var(--accent)">Qualified <span class="badge badge-blue">3</span></div>
+          <div class="pipeline-cards">
+            <div class="pipeline-card"><div class="pipeline-card-title">Wipro Campus — HVAC</div><div class="pipeline-card-meta">Bengaluru · IT Campus</div><div class="pipeline-card-value">₹38L</div></div>
+            <div class="pipeline-card"><div class="pipeline-card-title">HAL — Fire System</div><div class="pipeline-card-meta">Bengaluru · Govt.</div><div class="pipeline-card-value">₹1.4Cr</div></div>
+            <div class="pipeline-card"><div class="pipeline-card-title">Microchip — Piping</div><div class="pipeline-card-meta">Mysuru · Semiconductor</div><div class="pipeline-card-value">₹55L</div></div>
+          </div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="pipeline-head" style="background:var(--violet-light);color:var(--violet)">Proposal <span class="badge badge-violet">3</span></div>
+          <div class="pipeline-cards">
+            <div class="pipeline-card"><div class="pipeline-card-title">Tata Motors — Piping</div><div class="pipeline-card-meta">Pune · Automotive</div><div class="pipeline-card-value">₹1.1Cr</div></div>
+            <div class="pipeline-card"><div class="pipeline-card-title">Bharat Forge</div><div class="pipeline-card-meta">Bengaluru · Forging</div><div class="pipeline-card-value">₹75L</div></div>
+            <div class="pipeline-card"><div class="pipeline-card-title">Honeywell — Fire</div><div class="pipeline-card-meta">Delhi · Commercial</div><div class="pipeline-card-value">₹42L</div></div>
+          </div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="pipeline-head" style="background:var(--green-light);color:var(--green)">Closed Won <span class="badge badge-green">1</span></div>
+          <div class="pipeline-cards">
+            <div class="pipeline-card" style="border-left:3px solid var(--green)"><div class="pipeline-card-title">Minda Group — Structural</div><div class="pipeline-card-meta">Signed 20 Mar 2025</div><div class="pipeline-card-value">₹88L ✓</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client DB + Proposals -->
+      <div class="grid-6040">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Client Database</div><button class="btn btn-sm btn-primary" onclick="openModal('new-client')">+ Add Client</button></div>
+          <div class="card-body-0 table-wrap">
+            <table>
+              <thead><tr><th>Client</th><th>Industry</th><th>Contact</th><th>Projects</th><th>Total Value</th><th>Status</th></tr></thead>
+              <tbody id="client-table">
+                <tr><td class="strong">Nestlé India</td><td>FMCG</td><td>Rajan Mehta</td><td>1 active</td><td class="mono">₹85L</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td class="strong">Bosch Group</td><td>Automotive</td><td>Sunita Rao</td><td>3 active</td><td class="mono">₹2.9Cr</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td class="strong">Toyota Kirloskar</td><td>Automotive</td><td>K. Sharma</td><td>1 active</td><td class="mono">₹62L</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td class="strong">GE Power</td><td>Energy</td><td>Priya Nair</td><td>1 active</td><td class="mono">₹95L</td><td><span class="badge badge-amber">On Hold</span></td></tr>
+                <tr><td class="strong">Tata Motors</td><td>Automotive</td><td>Arjun Pillai</td><td>Prospect</td><td class="mono">₹1.1Cr</td><td><span class="badge badge-blue">Prospect</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">Proposal Tracker</div></div>
+          <div class="card-body" style="padding:0 18px">
+            <div class="invoice-item">
+              <div class="inv-main"><div class="inv-id">PROP-2025-018</div><div class="inv-name">Tata Motors — Industrial Piping</div><div class="inv-date">Sent: Mar 18 · Due: Mar 31</div></div>
+              <div style="text-align:right"><div class="inv-amount">₹1.1Cr</div><span class="badge badge-amber">Pending</span></div>
+            </div>
+            <div class="invoice-item">
+              <div class="inv-main"><div class="inv-id">PROP-2025-017</div><div class="inv-name">Bharat Forge — Fire System</div><div class="inv-date">Sent: Mar 12 · Due: Mar 26</div></div>
+              <div style="text-align:right"><div class="inv-amount">₹75L</div><span class="badge badge-red">Overdue</span></div>
+            </div>
+            <div class="invoice-item">
+              <div class="inv-main"><div class="inv-id">PROP-2025-016</div><div class="inv-name">Honeywell — Fire Suppression</div><div class="inv-date">Sent: Mar 20 · Due: Apr 5</div></div>
+              <div style="text-align:right"><div class="inv-amount">₹42L</div><span class="badge badge-blue">Sent</span></div>
+            </div>
+            <div class="invoice-item">
+              <div class="inv-main"><div class="inv-id">PROP-2025-015</div><div class="inv-name">Minda Group — Structural</div><div class="inv-date">Signed: Mar 20</div></div>
+              <div style="text-align:right"><div class="inv-amount">₹88L</div><span class="badge badge-green">Won ✓</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Lead Form -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">Add New Lead</div></div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Company Name</label><input class="form-input" id="lead-company" placeholder="e.g. Infosys Ltd." /></div>
+            <div class="form-group"><label class="form-label">Contact Person</label><input class="form-input" id="lead-contact" placeholder="Name & designation" /></div>
+          </div>
+          <div class="form-row cols-3">
+            <div class="form-group"><label class="form-label">Project Type</label><select class="form-select" id="lead-type"><option>Fire Protection</option><option>HVAC</option><option>Piping</option><option>Structural</option></select></div>
+            <div class="form-group"><label class="form-label">Est. Value (₹)</label><input class="form-input" id="lead-value" type="number" placeholder="e.g. 4500000" /></div>
+            <div class="form-group"><label class="form-label">Stage</label><select class="form-select" id="lead-stage"><option>New</option><option>Qualified</option><option>Proposal</option><option>Closed Won</option><option>Closed Lost</option></select></div>
+          </div>
+          <div class="form-row full">
+            <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="lead-notes" placeholder="Key requirements, source, decision timeline..."></textarea></div>
+          </div>
+          <button class="btn btn-primary" onclick="addLead()">Add to Pipeline</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         PROJECT OVERVIEW
+    ═══════════════════════════════ -->
+    <div class="page" id="page-projects">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Total Projects</div><div class="kpi-value">6</div></div>
+        <div class="kpi"><div class="kpi-label">On Track</div><div class="kpi-value" style="color:var(--green)">3</div></div>
+        <div class="kpi"><div class="kpi-label">Delayed</div><div class="kpi-value" style="color:var(--amber)">2</div></div>
+        <div class="kpi"><div class="kpi-label">Critical</div><div class="kpi-value" style="color:var(--red)">1</div></div>
+        <div class="kpi"><div class="kpi-label">Total Value</div><div class="kpi-value" style="font-size:20px">₹5.1Cr</div></div>
+        <div class="kpi"><div class="kpi-label">Avg Margin</div><div class="kpi-value">18%</div><div class="kpi-change up">↑ 2%</div></div>
+      </div>
+
+      <div class="grid-3 mb-16" id="project-cards">
+        <div class="project-card fire" onclick="goto('pm-a',null)">
+          <div class="pc-name">Nestlé Fire Protection</div>
+          <div class="pc-client">Nestlé India · Bengaluru</div>
+          <div class="pc-stats">
+            <div class="pc-stat"><div class="pc-stat-label">Progress</div><div class="pc-stat-val">72%</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Budget</div><div class="pc-stat-val">₹85L</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Team</div><div class="pc-stat-val">14</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Due</div><div class="pc-stat-val">Jun 30</div></div>
+          </div>
+          <div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:72%;background:var(--green)"></div></div><span class="prog-label">72%</span></div>
+          <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge badge-green">On Track</span><span class="badge badge-red">Fire</span></div>
+        </div>
+        <div class="project-card piping" onclick="goto('pm-b',null)">
+          <div class="pc-name">Bosch BGSW Piping</div>
+          <div class="pc-client">Bosch Global · Bengaluru</div>
+          <div class="pc-stats">
+            <div class="pc-stat"><div class="pc-stat-label">Progress</div><div class="pc-stat-val">45%</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Budget</div><div class="pc-stat-val">₹1.2Cr</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Team</div><div class="pc-stat-val">22</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Due</div><div class="pc-stat-val">Aug 15</div></div>
+          </div>
+          <div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:45%;background:var(--amber)"></div></div><span class="prog-label">45%</span></div>
+          <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge badge-amber">Delayed</span><span class="badge badge-blue">Piping</span></div>
+        </div>
+        <div class="project-card hvac" onclick="goto('pm-c',null)">
+          <div class="pc-name">Toyota HVAC</div>
+          <div class="pc-client">Toyota Kirloskar · Bengaluru</div>
+          <div class="pc-stats">
+            <div class="pc-stat"><div class="pc-stat-label">Progress</div><div class="pc-stat-val">88%</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Budget</div><div class="pc-stat-val">₹62L</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Team</div><div class="pc-stat-val">11</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Due</div><div class="pc-stat-val">Apr 20</div></div>
+          </div>
+          <div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:88%;background:var(--green)"></div></div><span class="prog-label">88%</span></div>
+          <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge badge-green">On Track</span><span class="badge badge-teal">HVAC</span></div>
+        </div>
+        <div class="project-card structural">
+          <div class="pc-name">GE Structural Fab</div>
+          <div class="pc-client">GE Power · Bengaluru</div>
+          <div class="pc-stats">
+            <div class="pc-stat"><div class="pc-stat-label">Progress</div><div class="pc-stat-val">33%</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Budget</div><div class="pc-stat-val">₹95L</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Team</div><div class="pc-stat-val">18</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Due</div><div class="pc-stat-val">Oct 01</div></div>
+          </div>
+          <div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:33%;background:var(--red)"></div></div><span class="prog-label">33%</span></div>
+          <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge badge-red">Critical</span><span class="badge badge-amber">Structural</span></div>
+        </div>
+        <div class="project-card fire">
+          <div class="pc-name">Bosch BID Fire</div>
+          <div class="pc-client">Bosch BID · Bengaluru</div>
+          <div class="pc-stats">
+            <div class="pc-stat"><div class="pc-stat-label">Progress</div><div class="pc-stat-val">60%</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Budget</div><div class="pc-stat-val">₹78L</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Team</div><div class="pc-stat-val">12</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Due</div><div class="pc-stat-val">Jul 10</div></div>
+          </div>
+          <div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:60%;background:var(--green)"></div></div><span class="prog-label">60%</span></div>
+          <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge badge-green">On Track</span><span class="badge badge-red">Fire</span></div>
+        </div>
+        <div class="project-card hvac">
+          <div class="pc-name">Bosch NHP HVAC</div>
+          <div class="pc-client">Bosch NHP · Bengaluru</div>
+          <div class="pc-stats">
+            <div class="pc-stat"><div class="pc-stat-label">Progress</div><div class="pc-stat-val">55%</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Budget</div><div class="pc-stat-val">₹1.0Cr</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Team</div><div class="pc-stat-val">16</div></div>
+            <div class="pc-stat"><div class="pc-stat-label">Due</div><div class="pc-stat-val">Sep 01</div></div>
+          </div>
+          <div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:55%;background:var(--amber)"></div></div><span class="prog-label">55%</span></div>
+          <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge badge-amber">Delayed</span><span class="badge badge-teal">HVAC</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         PROCUREMENT
+    ═══════════════════════════════ -->
+    <div class="page" id="page-procurement">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Open POs</div><div class="kpi-value">8</div><div class="kpi-change warn">₹24L value</div></div>
+        <div class="kpi"><div class="kpi-label">Pending Deliveries</div><div class="kpi-value" style="color:var(--amber)">4</div></div>
+        <div class="kpi"><div class="kpi-label">Vendors</div><div class="kpi-value">23</div></div>
+        <div class="kpi"><div class="kpi-label">Spend This Month</div><div class="kpi-value" style="font-size:20px">₹18.4L</div></div>
+        <div class="kpi"><div class="kpi-label">Low Stock Items</div><div class="kpi-value" style="color:var(--red)">6</div></div>
+      </div>
+
+      <div class="grid-6040">
+        <div>
+          <!-- Material Requests -->
+          <div class="card mb-16">
+            <div class="card-head"><div class="card-title">Purchase Orders</div><button class="btn btn-sm btn-primary" onclick="openModal('new-po')">+ New PO</button></div>
+            <div class="card-body-0 table-wrap">
+              <table>
+                <thead><tr><th>PO #</th><th>Material</th><th>Project</th><th>Vendor</th><th>Value</th><th>Delivery</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td class="mono strong">PO-1042</td><td>MS Pipe 6" — 200m</td><td>Bosch BGSW</td><td>Jindal Steel</td><td class="mono">₹3.8L</td><td class="mono">Mar 28</td><td><span class="badge badge-green">Approved</span></td></tr>
+                  <tr><td class="mono strong">PO-1041</td><td>Sprinkler Heads × 500</td><td>Bosch BID</td><td>Viking Corp</td><td class="mono">₹2.1L</td><td class="mono">Apr 02</td><td><span class="badge badge-amber">Pending</span></td></tr>
+                  <tr><td class="mono strong">PO-1040</td><td>HDPE Pipe 4" — 150m</td><td>Nestlé</td><td>Finolex Pipes</td><td class="mono">₹1.4L</td><td class="mono">Mar 30</td><td><span class="badge badge-blue">In Transit</span></td></tr>
+                  <tr><td class="mono strong">PO-1039</td><td>Welding Rods × 50kg</td><td>GE Structural</td><td>ESAB India</td><td class="mono">₹0.6L</td><td class="mono">Mar 27</td><td><span class="badge badge-red">Delayed</span></td></tr>
+                  <tr><td class="mono strong">PO-1038</td><td>Safety Harness × 20</td><td>All Sites</td><td>Mallcom India</td><td class="mono">₹0.8L</td><td class="mono">Mar 25</td><td><span class="badge badge-green">Delivered</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Inventory -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Inventory Status</div><span class="badge badge-red">6 low stock</span></div>
+            <div class="card-body-0 table-wrap">
+              <table>
+                <thead><tr><th>Material</th><th>Site</th><th>Stock</th><th>Min Level</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td class="strong">MS Pipe 6"</td><td>GE Site</td><td class="mono">12m</td><td class="mono">50m</td><td><span class="badge badge-red">Critical</span></td></tr>
+                  <tr><td class="strong">Sprinkler Heads</td><td>Nestlé</td><td class="mono">48</td><td class="mono">100</td><td><span class="badge badge-amber">Low</span></td></tr>
+                  <tr><td class="strong">GI Pipe 2"</td><td>Bosch BID</td><td class="mono">80m</td><td class="mono">100m</td><td><span class="badge badge-amber">Low</span></td></tr>
+                  <tr><td class="strong">Welding Rods</td><td>Bosch BGSW</td><td class="mono">35kg</td><td class="mono">20kg</td><td><span class="badge badge-green">OK</span></td></tr>
+                  <tr><td class="strong">Safety Harness</td><td>All</td><td class="mono">24</td><td class="mono">10</td><td><span class="badge badge-green">OK</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vendor DB + New MR -->
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card">
+            <div class="card-head"><div class="card-title">Vendor Performance</div></div>
+            <div class="card-body" style="padding:0 18px">
+              <div class="activity-item">
+                <div class="activity-dot dot-green"></div>
+                <div><div class="activity-text"><strong>Jindal Steel</strong> — MS & GI Pipes</div><div class="activity-time">Rating: ⭐⭐⭐⭐⭐ · On-time: 95%</div></div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot dot-green"></div>
+                <div><div class="activity-text"><strong>Finolex Pipes</strong> — HDPE & CPVC</div><div class="activity-time">Rating: ⭐⭐⭐⭐ · On-time: 88%</div></div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot dot-amber"></div>
+                <div><div class="activity-text"><strong>Viking Corp</strong> — Sprinklers</div><div class="activity-time">Rating: ⭐⭐⭐ · On-time: 72% ⚠️</div></div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot dot-red"></div>
+                <div><div class="activity-text"><strong>ESAB India</strong> — Welding</div><div class="activity-time">Rating: ⭐⭐⭐ · Current PO delayed</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="card-title">Material Request Form</div></div>
+            <div class="card-body">
+              <div class="form-row full"><div class="form-group"><label class="form-label">Project</label><select class="form-select"><option>Nestlé Fire Protection</option><option>Bosch BGSW Piping</option><option>Toyota HVAC</option><option>GE Structural</option></select></div></div>
+              <div class="form-row"><div class="form-group"><label class="form-label">Material</label><input class="form-input" placeholder="Material name & spec" /></div><div class="form-group"><label class="form-label">Quantity</label><input class="form-input" type="number" placeholder="Qty" /></div></div>
+              <div class="form-row full"><div class="form-group"><label class="form-label">Required By</label><input class="form-input" type="date" /></div></div>
+              <button class="btn btn-primary" onclick="showToast('Material request submitted!')">Submit Request</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         HUMAN RESOURCES
+    ═══════════════════════════════ -->
+    <div class="page" id="page-hr">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Total Employees</div><div class="kpi-value">112</div></div>
+        <div class="kpi"><div class="kpi-label">On-Site Today</div><div class="kpi-value">84</div><div class="kpi-change up">75% present</div></div>
+        <div class="kpi"><div class="kpi-label">Open Roles</div><div class="kpi-value" style="color:var(--red)">6</div></div>
+        <div class="kpi"><div class="kpi-label">Payroll (Mar)</div><div class="kpi-value" style="font-size:18px">₹28.4L</div></div>
+        <div class="kpi"><div class="kpi-label">Avg Tenure</div><div class="kpi-value">3.2y</div></div>
+      </div>
+
+      <div class="grid-6040">
+        <div>
+          <div class="card mb-16">
+            <div class="card-head"><div class="card-title">Employee Directory</div><button class="btn btn-sm btn-primary">+ Add Employee</button></div>
+            <div class="card-body-0 table-wrap">
+              <table>
+                <thead><tr><th>Name</th><th>Role</th><th>Site</th><th>Type</th><th>Since</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td class="strong">Ramesh Kumar</td><td>Supervisor</td><td>Nestlé</td><td><span class="badge badge-blue">Staff</span></td><td class="mono">Jan 2022</td><td><span class="badge badge-green">Active</span></td></tr>
+                  <tr><td class="strong">Priya Verma</td><td>Safety Officer</td><td>Bosch BGSW</td><td><span class="badge badge-blue">Staff</span></td><td class="mono">Jun 2023</td><td><span class="badge badge-green">Active</span></td></tr>
+                  <tr><td class="strong">Santosh M.</td><td>Welder (Certified)</td><td>GE Structural</td><td><span class="badge badge-grey">Contract</span></td><td class="mono">Feb 2024</td><td><span class="badge badge-green">Active</span></td></tr>
+                  <tr><td class="strong">Suresh Babu</td><td>Store Keeper</td><td>Toyota</td><td><span class="badge badge-blue">Staff</span></td><td class="mono">Mar 2021</td><td><span class="badge badge-green">Active</span></td></tr>
+                  <tr><td class="strong">Kiran J.</td><td>Project Engineer</td><td>Head Office</td><td><span class="badge badge-violet">Engineer</span></td><td class="mono">Aug 2020</td><td><span class="badge badge-green">Active</span></td></tr>
+                  <tr><td class="strong">[VACANT]</td><td>Safety Engineer</td><td>Bosch NHP</td><td><span class="badge badge-grey">—</span></td><td class="mono">—</td><td><span class="badge badge-red">Open</span></td></tr>
+                  <tr><td class="strong">[VACANT]</td><td>Quality Supervisor</td><td>GE Structural</td><td><span class="badge badge-grey">—</span></td><td class="mono">—</td><td><span class="badge badge-red">Open</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Attendance today -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Today's Attendance Summary</div><span class="badge badge-green">Mar 27, 2025</span></div>
+            <div class="card-body-0 table-wrap">
+              <table>
+                <thead><tr><th>Site</th><th>Present</th><th>Absent</th><th>Total</th><th>%</th></tr></thead>
+                <tbody>
+                  <tr><td>Nestlé</td><td class="mono" style="color:var(--green)">13</td><td class="mono" style="color:var(--red)">1</td><td class="mono">14</td><td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:93%;background:var(--green)"></div></div><span class="prog-label">93%</span></div></td></tr>
+                  <tr><td>Bosch BGSW</td><td class="mono" style="color:var(--green)">19</td><td class="mono" style="color:var(--red)">3</td><td class="mono">22</td><td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:86%;background:var(--green)"></div></div><span class="prog-label">86%</span></div></td></tr>
+                  <tr><td>Toyota</td><td class="mono" style="color:var(--green)">11</td><td class="mono" style="color:var(--red)">0</td><td class="mono">11</td><td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--green)"></div></div><span class="prog-label">100%</span></div></td></tr>
+                  <tr><td>GE Structural</td><td class="mono" style="color:var(--amber)">14</td><td class="mono" style="color:var(--red)">4</td><td class="mono">18</td><td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:78%;background:var(--amber)"></div></div><span class="prog-label">78%</span></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card">
+            <div class="card-head"><div class="card-title">Payroll Inputs — March</div></div>
+            <div class="card-body" style="padding:0 18px">
+              <div class="invoice-item">
+                <div class="inv-main"><div class="inv-name">Site Supervisors (8)</div><div class="inv-date">Staff · Monthly</div></div>
+                <div class="inv-amount">₹4.8L</div>
+              </div>
+              <div class="invoice-item">
+                <div class="inv-main"><div class="inv-name">Engineers & Safety (12)</div><div class="inv-date">Staff · Monthly</div></div>
+                <div class="inv-amount">₹9.6L</div>
+              </div>
+              <div class="invoice-item">
+                <div class="inv-main"><div class="inv-name">Welders & Fitters (34)</div><div class="inv-date">Daily Wage · 26 days</div></div>
+                <div class="inv-amount">₹8.8L</div>
+              </div>
+              <div class="invoice-item">
+                <div class="inv-main"><div class="inv-name">Helpers & Riggers (38)</div><div class="inv-date">Daily Wage · 26 days</div></div>
+                <div class="inv-amount">₹5.2L</div>
+              </div>
+              <div style="border-top:2px solid var(--border);padding-top:10px;display:flex;justify-content:space-between;align-items:center;">
+                <strong>Total Payroll</strong>
+                <span style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--ink)">₹28.4L</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="card-title">Task Allocation</div></div>
+            <div class="card-body" style="padding:0 18px">
+              <div class="activity-item"><div class="activity-dot dot-blue"></div><div><div class="activity-text"><strong>Kiran J.</strong> — Site inspection, Toyota HVAC Phase 3</div><div class="activity-time">Today · Due: Apr 1</div></div></div>
+              <div class="activity-item"><div class="activity-dot dot-amber"></div><div><div class="activity-text"><strong>Ramesh K.</strong> — Supervise GE structural weld audit</div><div class="activity-time">Mar 28–30</div></div></div>
+              <div class="activity-item"><div class="activity-dot dot-green"></div><div><div class="activity-text"><strong>Priya V.</strong> — Safety audit, Bosch BID</div><div class="activity-time">Mar 29</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         FINANCE
+    ═══════════════════════════════ -->
+    <div class="page" id="page-finance">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Total Invoiced</div><div class="kpi-value" style="font-size:20px">₹2.45Cr</div></div>
+        <div class="kpi"><div class="kpi-label">Received</div><div class="kpi-value" style="font-size:20px;color:var(--green)">₹1.67Cr</div></div>
+        <div class="kpi"><div class="kpi-label">Outstanding</div><div class="kpi-value" style="font-size:20px;color:var(--red)">₹78L</div></div>
+        <div class="kpi"><div class="kpi-label">Total Expenses</div><div class="kpi-value" style="font-size:20px">₹1.42Cr</div></div>
+        <div class="kpi"><div class="kpi-label">Gross Profit</div><div class="kpi-value" style="font-size:20px;color:var(--green)">₹25L</div></div>
+        <div class="kpi"><div class="kpi-label">Net Margin</div><div class="kpi-value">17.5%</div><div class="kpi-change up">↑ Target: 18%</div></div>
+      </div>
+
+      <div class="grid-6040">
+        <!-- Invoice tracker -->
+        <div class="card mb-16">
+          <div class="card-head"><div class="card-title">Invoice & Payment Tracker</div><button class="btn btn-sm btn-primary" onclick="openModal('new-invoice')">+ New Invoice</button></div>
+          <div class="card-body-0 table-wrap">
+            <table>
+              <thead><tr><th>Invoice #</th><th>Project</th><th>Amount</th><th>Issued</th><th>Due</th><th>Received</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td class="mono strong">INV-025</td><td>Nestlé Fire</td><td class="mono">₹18L</td><td class="mono">Mar 1</td><td class="mono">Mar 15</td><td class="mono" style="color:var(--red)">₹0</td><td><span class="badge badge-red">12d Overdue</span></td></tr>
+                <tr><td class="mono strong">INV-024</td><td>Toyota HVAC</td><td class="mono">₹12L</td><td class="mono">Mar 5</td><td class="mono">Mar 20</td><td class="mono" style="color:var(--amber)">₹6L</td><td><span class="badge badge-amber">Part Paid</span></td></tr>
+                <tr><td class="mono strong">INV-023</td><td>Bosch BGSW</td><td class="mono">₹25L</td><td class="mono">Feb 20</td><td class="mono">Mar 6</td><td class="mono" style="color:var(--green)">₹25L</td><td><span class="badge badge-green">Cleared ✓</span></td></tr>
+                <tr><td class="mono strong">INV-022</td><td>GE Structural</td><td class="mono">₹20L</td><td class="mono">Feb 10</td><td class="mono">Feb 25</td><td class="mono" style="color:var(--red)">₹0</td><td><span class="badge badge-red">30d Overdue</span></td></tr>
+                <tr><td class="mono strong">INV-021</td><td>Bosch BID</td><td class="mono">₹15L</td><td class="mono">Feb 1</td><td class="mono">Feb 15</td><td class="mono" style="color:var(--green)">₹15L</td><td><span class="badge badge-green">Cleared ✓</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Budget per project -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Budget vs Actual</div></div>
+          <div class="card-body">
+            <div id="budget-bars"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cash Flow -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Monthly Cash Flow</div></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;align-items:end;height:100px;margin-bottom:8px">
+              ${[['Oct','28','22'],['Nov','34','26'],['Dec','42','31'],['Jan','38','29'],['Feb','45','38'],['Mar','35','18']].map(([m,r,e])=>`
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;height:100%">
+                  <div style="flex:1;display:flex;align-items:flex-end;gap:1px;width:100%">
+                    <div style="flex:1;background:var(--green);border-radius:2px 2px 0 0;height:${r/45*100}%;min-height:4px;opacity:0.8"></div>
+                    <div style="flex:1;background:var(--red);border-radius:2px 2px 0 0;height:${e/45*100}%;min-height:4px;opacity:0.8"></div>
+                  </div>
+                  <div style="font-size:9px;color:var(--ink4);font-family:var(--font-mono)">${m}</div>
+                </div>
+              `).join('')}
+            </div>
+            <div style="display:flex;gap:14px;font-size:10px">
+              <span><span style="display:inline-block;width:8px;height:8px;background:var(--green);border-radius:2px;margin-right:4px"></span>Received (L)</span>
+              <span><span style="display:inline-block;width:8px;height:8px;background:var(--red);border-radius:2px;margin-right:4px"></span>Expenses (L)</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">Profitability by Project</div></div>
+          <div class="card-body" style="padding:0 18px">
+            ${[['Nestlé Fire','85L','68L','20%',true],['Bosch BGSW','1.2Cr','98L','18%',true],['Toyota HVAC','62L','49L','21%',true],['GE Structural','95L','82L','14%',false],['Bosch BID','78L','63L','19%',true]].map(([n,b,s,m,ok])=>`
+              <div class="invoice-item">
+                <div class="inv-main"><div class="inv-name">${n}</div><div class="inv-date">Budget: ₹${b} · Spend: ₹${s}</div></div>
+                <div><span class="badge ${ok?'badge-green':'badge-amber'}">${m}</span></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         PROJECT MANAGEMENT — A (Nestlé)
+    ═══════════════════════════════ -->
+    <div class="page" id="page-pm-a">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <div style="width:40px;height:40px;border-radius:10px;background:var(--red-light);display:flex;align-items:center;justify-content:center;font-size:20px">🔴</div>
+        <div>
+          <div style="font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:-0.5px">Nestlé Fire Protection System</div>
+          <div style="font-size:12px;color:var(--ink3)">Client: Nestlé India · Bengaluru Plant · Contract: ₹85L · PM: Kiran J.</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <span class="badge badge-green">On Track</span>
+          <span class="badge badge-red">Fire Protection</span>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Progress</div><div class="kpi-value">72%</div></div>
+        <div class="kpi"><div class="kpi-label">Budget</div><div class="kpi-value" style="font-size:18px">₹85L</div></div>
+        <div class="kpi"><div class="kpi-label">Spent</div><div class="kpi-value" style="font-size:18px">₹58L</div></div>
+        <div class="kpi"><div class="kpi-label">Timeline</div><div class="kpi-value">On Time</div></div>
+        <div class="kpi"><div class="kpi-label">Team</div><div class="kpi-value">14</div></div>
+        <div class="kpi"><div class="kpi-label">Open Issues</div><div class="kpi-value" style="color:var(--amber)">2</div></div>
+      </div>
+
+      <div class="sub-tabs">
+        <div class="sub-tab active" onclick="switchSubTab(this,'pma')">📋 Task Breakdown</div>
+        <div class="sub-tab" onclick="switchSubTab(this,'pma')">📅 Timeline</div>
+        <div class="sub-tab" onclick="switchSubTab(this,'pma')">📝 Daily Log</div>
+        <div class="sub-tab" onclick="switchSubTab(this,'pma')">⚠️ Issues</div>
+        <div class="sub-tab" onclick="switchSubTab(this,'pma')">✅ Approvals</div>
+      </div>
+
+      <div class="grid-6040">
+        <!-- Task Breakdown -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Task Breakdown — Work Phases</div><button class="btn btn-sm btn-primary" onclick="addTask()">+ Add Task</button></div>
+          <div class="card-body" id="task-list-a">
+            <div class="divider-label"><span>Phase 1: Civil & Foundation</span></div>
+            <div class="checklist-item"><div class="check-box done" onclick="toggleCheck(this)">✓</div><div class="check-text done">Site survey & marking</div><span class="check-meta">Ramesh K. · Done Mar 5</span></div>
+            <div class="checklist-item"><div class="check-box done" onclick="toggleCheck(this)">✓</div><div class="check-text done">Riser shaft preparation</div><span class="check-meta">Done Mar 12</span></div>
+            <div class="checklist-item"><div class="check-box done" onclick="toggleCheck(this)">✓</div><div class="check-text done">Pump room base casting</div><span class="check-meta">Done Mar 18</span></div>
+
+            <div class="divider-label"><span>Phase 2: Main Piping</span></div>
+            <div class="checklist-item"><div class="check-box done" onclick="toggleCheck(this)">✓</div><div class="check-text done">Underground main supply line</div><span class="check-meta">Done Mar 20</span></div>
+            <div class="checklist-item"><div class="check-box done" onclick="toggleCheck(this)">✓</div><div class="check-text done">Riser pipes — Floors B1 to G</div><span class="check-meta">Done Mar 22</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Riser pipes — Floors 1 to 4</div><span class="check-meta">Suresh M. · Due Apr 5</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Horizontal branch lines</div><span class="check-meta">Due Apr 15</span></div>
+
+            <div class="divider-label"><span>Phase 3: Sprinkler Installation</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Sprinkler heads — B1 & Ground</div><span class="check-meta">Due Apr 10</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Sprinkler heads — Floors 1-4</div><span class="check-meta">Due Apr 20</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Pump set installation</div><span class="check-meta">Due May 1</span></div>
+
+            <div class="divider-label"><span>Phase 4: Testing & Handover</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Hydrostatic pressure test</div><span class="check-meta">Due May 15</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Flow test & commissioning</div><span class="check-meta">Due Jun 1</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">NBC compliance certificate</div><span class="check-meta">Due Jun 15</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Client handover & snag list</div><span class="check-meta">Due Jun 30</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <!-- Gantt Timeline -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">📅 Milestone Timeline</div></div>
+            <div class="card-body" style="padding:0">
+              <div class="gantt-wrap">
+                <div class="gantt-table">
+                  <div class="gantt-row" style="background:var(--surface2)">
+                    <div class="gantt-label head">Phase</div>
+                    <div class="gantt-timeline">
+                      <div class="gantt-months">
+                        <div class="gantt-month">Mar</div><div class="gantt-month">Apr</div><div class="gantt-month">May</div><div class="gantt-month">Jun</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="gantt-row">
+                    <div class="gantt-label">Civil & Foundation</div>
+                    <div class="gantt-timeline"><div class="gantt-bar complete" style="background:var(--green);width:25%;margin-left:0%">Done</div></div>
+                  </div>
+                  <div class="gantt-row">
+                    <div class="gantt-label">Main Piping</div>
+                    <div class="gantt-timeline"><div class="gantt-bar active" style="background:var(--accent);width:45%;margin-left:15%">In Progress</div></div>
+                  </div>
+                  <div class="gantt-row">
+                    <div class="gantt-label">Sprinkler Install</div>
+                    <div class="gantt-timeline"><div class="gantt-bar" style="background:var(--ink3);width:35%;margin-left:40%">Upcoming</div></div>
+                  </div>
+                  <div class="gantt-row">
+                    <div class="gantt-label">Testing & Handover</div>
+                    <div class="gantt-timeline"><div class="gantt-bar" style="background:var(--amber);width:30%;margin-left:70%">Q2</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Issues -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">⚠️ Open Issues</div><span class="badge badge-amber">2 open</span></div>
+            <div class="card-body" style="padding:0 18px">
+              <div class="risk-item">
+                <div class="risk-level" style="background:var(--amber-light);color:var(--amber)">Medium</div>
+                <div><div class="risk-text">Sprinkler head delivery delayed by Viking Corp — may affect Phase 3 start</div><div class="risk-owner">Owner: Procurement · ETA: Apr 2</div></div>
+              </div>
+              <div class="risk-item">
+                <div class="risk-level" style="background:var(--red-light);color:var(--red)">High</div>
+                <div><div class="risk-text">Payment INV-025 (₹18L) overdue — client AP department follow-up needed</div><div class="risk-owner">Owner: Finance · 12 days overdue</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Daily Log -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">📝 Daily Log</div></div>
+            <div class="card-body">
+              <div class="form-row full"><div class="form-group"><label class="form-label">Today's Work Summary</label><textarea class="form-textarea" id="log-a" placeholder="e.g. Completed Floor 1 riser branch, 8 workers on site, no incidents..."></textarea></div></div>
+              <div class="form-row"><div class="form-group"><label class="form-label">Headcount</label><input class="form-input" type="number" placeholder="Workers today" /></div><div class="form-group"><label class="form-label">Materials Used</label><input class="form-input" placeholder="e.g. 30m GI pipe" /></div></div>
+              <button class="btn btn-primary" onclick="showToast('Daily log submitted for Nestlé!')">Submit Log</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         PROJECT MANAGEMENT — B (Bosch)
+    ═══════════════════════════════ -->
+    <div class="page" id="page-pm-b">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <div style="width:40px;height:40px;border-radius:10px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:20px">🔵</div>
+        <div>
+          <div style="font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:-0.5px">Bosch BGSW — Industrial Piping</div>
+          <div style="font-size:12px;color:var(--ink3)">Client: Bosch Global · Bengaluru · Contract: ₹1.2Cr · PM: Suresh J.</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <span class="badge badge-amber">Delayed</span>
+          <span class="badge badge-blue">Piping</span>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Progress</div><div class="kpi-value" style="color:var(--amber)">45%</div></div>
+        <div class="kpi"><div class="kpi-label">Budget</div><div class="kpi-value" style="font-size:18px">₹1.2Cr</div></div>
+        <div class="kpi"><div class="kpi-label">Spent</div><div class="kpi-value" style="font-size:18px">₹52L</div></div>
+        <div class="kpi"><div class="kpi-label">Delay</div><div class="kpi-value" style="color:var(--red)">18 days</div></div>
+        <div class="kpi"><div class="kpi-label">Team</div><div class="kpi-value">22</div></div>
+        <div class="kpi"><div class="kpi-label">Open Issues</div><div class="kpi-value" style="color:var(--red)">4</div></div>
+      </div>
+
+      <div class="grid-6040">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Task Breakdown — Piping Phases</div><span class="badge badge-amber">18 days behind</span></div>
+          <div class="card-body">
+            <div class="divider-label"><span>Phase 1: Layout & Fabrication</span></div>
+            <div class="checklist-item"><div class="check-box done" onclick="toggleCheck(this)">✓</div><div class="check-text done">Isometric drawing review</div><span class="check-meta">Done</span></div>
+            <div class="checklist-item"><div class="check-box done" onclick="toggleCheck(this)">✓</div><div class="check-text done">Pipe supports fabrication</div><span class="check-meta">Done</span></div>
+            <div class="checklist-item"><div class="check-box done" onclick="toggleCheck(this)">✓</div><div class="check-text done">MS pipe cutting & threading</div><span class="check-meta">Done</span></div>
+
+            <div class="divider-label"><span>Phase 2: Main Line Installation</span></div>
+            <div class="checklist-item"><div class="check-box done" onclick="toggleCheck(this)">✓</div><div class="check-text done">Underground service lines</div><span class="check-meta">Done</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Overhead main header — Zone A</div><span class="check-meta" style="color:var(--red)">DELAYED — Apr 10</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Overhead main header — Zone B</div><span class="check-meta">Apr 20</span></div>
+
+            <div class="divider-label"><span>Phase 3: Equipment Connections</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">CNC machine utility lines</div><span class="check-meta">May 10</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Compressed air distribution</div><span class="check-meta">May 20</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Valve & instrumentation</div><span class="check-meta">Jun 1</span></div>
+
+            <div class="divider-label"><span>Phase 4: Testing</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Pressure testing all lines</div><span class="check-meta">Jul 1</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Flushing & commissioning</div><span class="check-meta">Jul 15</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Client sign-off</div><span class="check-meta">Aug 15</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-head"><div class="card-title">📅 Schedule Recovery Plan</div></div>
+            <div class="card-body" style="padding:0">
+              <div class="gantt-wrap">
+                <div class="gantt-table">
+                  <div class="gantt-row" style="background:var(--surface2)">
+                    <div class="gantt-label head">Phase</div>
+                    <div class="gantt-timeline"><div class="gantt-months"><div class="gantt-month">Apr</div><div class="gantt-month">May</div><div class="gantt-month">Jun</div><div class="gantt-month">Aug</div></div></div>
+                  </div>
+                  <div class="gantt-row"><div class="gantt-label" style="color:var(--green)">Fabrication ✓</div><div class="gantt-timeline"><div class="gantt-bar complete" style="background:var(--green);width:20%">Done</div></div></div>
+                  <div class="gantt-row"><div class="gantt-label" style="color:var(--red)">Main Lines ⚠️</div><div class="gantt-timeline"><div class="gantt-bar active" style="background:var(--red);width:40%;margin-left:5%">Delayed</div></div></div>
+                  <div class="gantt-row"><div class="gantt-label">Equipment Conn.</div><div class="gantt-timeline"><div class="gantt-bar" style="background:var(--ink3);width:30%;margin-left:40%">Planned</div></div></div>
+                  <div class="gantt-row"><div class="gantt-label">Testing</div><div class="gantt-timeline"><div class="gantt-bar" style="background:var(--amber);width:25%;margin-left:75%">Recovery</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="card-title">⚠️ Open Issues (4)</div></div>
+            <div class="card-body" style="padding:0 18px">
+              <div class="risk-item"><div class="risk-level" style="background:var(--red-light);color:var(--red)">Critical</div><div><div class="risk-text">MS Pipe 6" delivery 4 days late from Jindal Steel</div><div class="risk-owner">Owner: Procurement · Escalated</div></div></div>
+              <div class="risk-item"><div class="risk-level" style="background:var(--amber-light);color:var(--amber)">High</div><div><div class="risk-text">Zone A access restricted by client shutdown schedule</div><div class="risk-owner">Owner: PM Suresh J.</div></div></div>
+              <div class="risk-item"><div class="risk-level" style="background:var(--amber-light);color:var(--amber)">Medium</div><div><div class="risk-text">3 workers absent week of Mar 24–28</div><div class="risk-owner">Owner: HR</div></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="card-title">📝 Log Today</div></div>
+            <div class="card-body">
+              <textarea class="form-textarea" placeholder="Today's progress, workers on site, issues..."></textarea>
+              <button class="btn btn-primary" style="margin-top:8px" onclick="showToast('Log saved for Bosch BGSW!')">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         PROJECT MANAGEMENT — C (Toyota)
+    ═══════════════════════════════ -->
+    <div class="page" id="page-pm-c">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <div style="width:40px;height:40px;border-radius:10px;background:var(--amber-light);display:flex;align-items:center;justify-content:center;font-size:20px">🟡</div>
+        <div>
+          <div style="font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:-0.5px">Toyota Kirloskar — HVAC System</div>
+          <div style="font-size:12px;color:var(--ink3)">Client: Toyota Kirloskar · Bidadi · Contract: ₹62L · PM: Amit V.</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <span class="badge badge-green">On Track — 88%</span>
+          <span class="badge badge-teal">HVAC</span>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Progress</div><div class="kpi-value" style="color:var(--green)">88%</div></div>
+        <div class="kpi"><div class="kpi-label">Remaining Work</div><div class="kpi-value" style="font-size:18px">₹8L</div></div>
+        <div class="kpi"><div class="kpi-label">Due</div><div class="kpi-value">Apr 20</div><div class="kpi-change up">24 days left</div></div>
+        <div class="kpi"><div class="kpi-label">Team</div><div class="kpi-value">11</div></div>
+        <div class="kpi"><div class="kpi-label">Issues</div><div class="kpi-value" style="color:var(--green)">0</div></div>
+      </div>
+
+      <div class="grid-6040">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Final Phase Checklist</div><span class="badge badge-green">88% complete</span></div>
+          <div class="card-body">
+            <div class="divider-label"><span>Completed Phases</span></div>
+            <div class="checklist-item"><div class="check-box done">✓</div><div class="check-text done">AHU room civil work</div><span class="check-meta">Done</span></div>
+            <div class="checklist-item"><div class="check-box done">✓</div><div class="check-text done">Main duct fabrication</div><span class="check-meta">Done</span></div>
+            <div class="checklist-item"><div class="check-box done">✓</div><div class="check-text done">AHU installation — 4 units</div><span class="check-meta">Done</span></div>
+            <div class="checklist-item"><div class="check-box done">✓</div><div class="check-text done">Branch ducting — Zones 1-4</div><span class="check-meta">Done</span></div>
+            <div class="checklist-item"><div class="check-box done">✓</div><div class="check-text done">Chilled water piping</div><span class="check-meta">Done</span></div>
+            <div class="checklist-item"><div class="check-box done">✓</div><div class="check-text done">VAV boxes installation</div><span class="check-meta">Done</span></div>
+
+            <div class="divider-label"><span>Final Phase (12% remaining)</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Grilles & diffusers installation</div><span class="check-meta">Due Apr 5</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">BMS integration & controls</div><span class="check-meta">Due Apr 10</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Balancing & commissioning</div><span class="check-meta">Due Apr 15</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Snagging & final inspection</div><span class="check-meta">Due Apr 18</span></div>
+            <div class="checklist-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">Client handover & O&M docs</div><span class="check-meta">Apr 20 🎯</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-head"><div class="card-title">Handover Approvals</div></div>
+            <div class="card-body" style="padding:0 18px">
+              <div class="risk-item"><div class="risk-level" style="background:var(--green-light);color:var(--green)">Approved</div><div><div class="risk-text">Phase 1-4 completion sign-off</div><div class="risk-owner">Client: K. Sharma · Mar 15</div></div></div>
+              <div class="risk-item"><div class="risk-level" style="background:var(--green-light);color:var(--green)">Approved</div><div><div class="risk-text">AHU performance test certificate</div><div class="risk-owner">Toyota QA · Mar 20</div></div></div>
+              <div class="risk-item"><div class="risk-level" style="background:var(--amber-light);color:var(--amber)">Pending</div><div><div class="risk-text">BMS commissioning report</div><div class="risk-owner">Due: Apr 10</div></div></div>
+              <div class="risk-item"><div class="risk-level" style="background:var(--surface3);color:var(--ink3)">Upcoming</div><div><div class="risk-text">Final handover certificate</div><div class="risk-owner">Target: Apr 20</div></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="card-title">Invoice Status</div></div>
+            <div class="card-body" style="padding:0 18px">
+              <div class="invoice-item"><div class="inv-main"><div class="inv-id">Milestone 1 — 30%</div><div class="inv-name">₹18.6L</div></div><span class="badge badge-green">Received ✓</span></div>
+              <div class="invoice-item"><div class="inv-main"><div class="inv-id">Milestone 2 — 40%</div><div class="inv-name">₹24.8L</div></div><span class="badge badge-green">Received ✓</span></div>
+              <div class="invoice-item"><div class="inv-main"><div class="inv-id">Milestone 3 — 25%</div><div class="inv-name">₹15.5L</div></div><span class="badge badge-amber">Part Paid</span></div>
+              <div class="invoice-item"><div class="inv-main"><div class="inv-id">Final 5% — Retention</div><div class="inv-name">₹3.1L</div></div><span class="badge badge-grey">On Handover</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="card-title">📝 Daily Log</div></div>
+            <div class="card-body">
+              <textarea class="form-textarea" placeholder="Today's progress at Toyota site..."></textarea>
+              <button class="btn btn-success" style="margin-top:8px" onclick="showToast('Log saved for Toyota HVAC!')">Submit Log</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main-area -->
+</div><!-- /layout -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-new-lead" onclick="closeModal('new-lead',event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head"><div class="modal-title">Add New Lead</div><button class="modal-close" onclick="closeModal('new-lead',{target:document.getElementById('modal-new-lead')})">×</button></div>
+    <div class="modal-body">
+      <div class="form-row"><div class="form-group"><label class="form-label">Company</label><input class="form-input" placeholder="Company name" /></div><div class="form-group"><label class="form-label">Contact</label><input class="form-input" placeholder="Contact name" /></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Project Type</label><select class="form-select"><option>Fire Protection</option><option>HVAC</option><option>Piping</option><option>Structural</option></select></div><div class="form-group"><label class="form-label">Est. Value (₹)</label><input class="form-input" type="number" placeholder="0" /></div></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('new-lead',{target:document.getElementById('modal-new-lead')})">Cancel</button><button class="btn btn-primary" onclick="showToast('Lead added to pipeline!');closeModal('new-lead',{target:document.getElementById('modal-new-lead')})">Add Lead</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-invoice" onclick="closeModal('new-invoice',event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head"><div class="modal-title">Create Invoice</div><button class="modal-close" onclick="closeModal('new-invoice',{target:document.getElementById('modal-new-invoice')})">×</button></div>
+    <div class="modal-body">
+      <div class="form-row"><div class="form-group"><label class="form-label">Project</label><select class="form-select"><option>Nestlé Fire</option><option>Bosch BGSW</option><option>Toyota HVAC</option><option>GE Structural</option></select></div><div class="form-group"><label class="form-label">Amount (₹)</label><input class="form-input" type="number" placeholder="0" /></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Milestone</label><input class="form-input" placeholder="e.g. Phase 2 completion" /></div><div class="form-group"><label class="form-label">Due Date</label><input class="form-input" type="date" /></div></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('new-invoice',{target:document.getElementById('modal-new-invoice')})">Cancel</button><button class="btn btn-primary" onclick="showToast('Invoice created!');closeModal('new-invoice',{target:document.getElementById('modal-new-invoice')})">Create Invoice</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="toast-icon">✓</span><span id="toast-msg"></span></div>
+
+<script>
+// ─── NAV ───
+const titles = { home:'Command Centre', sales:'Sales & Marketing', projects:'Project Overview', procurement:'Procurement & Materials', hr:'Human Resources', finance:'Finance & Accounting', 'pm-a':'Project: Nestlé Fire Protection', 'pm-b':'Project: Bosch BGSW Piping', 'pm-c':'Project: Toyota HVAC' };
+
+function goto(id, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('topbar-title').textContent = titles[id] || id;
+  if(navEl) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    navEl.classList.add('active');
+  }
+  window.scrollTo(0,0);
+}
+
+// ─── SUB TABS ───
+function switchSubTab(el, prefix) {
+  el.parentElement.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── CHECKLIST ───
+function toggleCheck(el) {
+  const isDone = el.classList.toggle('done');
+  el.textContent = isDone ? '✓' : '';
+  const textEl = el.nextElementSibling;
+  if(textEl) textEl.classList.toggle('done', isDone);
+  showToast(isDone ? 'Task marked complete!' : 'Task reopened');
+}
+
+// ─── MODALS ───
+function openModal(id) { document.getElementById('modal-' + id).classList.add('open'); }
+function closeModal(id, e) { if(e.target === document.getElementById('modal-' + id) || !e.currentTarget) document.getElementById('modal-' + id).classList.remove('open'); }
+
+// ─── TOAST ───
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── LEAD ADD ───
+function addLead() {
+  const co = document.getElementById('lead-company').value;
+  if(!co) { showToast('Please enter company name'); return; }
+  showToast(`Lead "${co}" added to pipeline!`);
+  document.getElementById('lead-company').value = '';
+  document.getElementById('lead-contact').value = '';
+  document.getElementById('lead-value').value = '';
+}
+
+// ─── BUDGET BARS ───
+function renderBudgetBars() {
+  const data = [
+    ['Nestlé Fire','85','68','var(--red)'],
+    ['Bosch BGSW','120','52','var(--accent)'],
+    ['Toyota HVAC','62','54','var(--teal)'],
+    ['GE Structural','95','38','var(--amber)'],
+    ['Bosch BID','78','47','var(--red)'],
+    ['Bosch NHP','100','55','var(--teal)'],
+  ];
+  const el = document.getElementById('budget-bars');
+  if(!el) return;
+  el.innerHTML = data.map(([n,b,s,c]) => `
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px">
+        <span style="font-weight:600">${n}</span>
+        <span style="font-family:var(--font-mono);color:var(--ink3)">₹${s}L / ₹${b}L</span>
+      </div>
+      <div style="position:relative;height:8px;background:var(--surface3);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${b}%;background:var(--border2);border-radius:4px;position:absolute"></div>
+        <div style="height:100%;width:${Math.round(s/b*100)}%;background:${c};border-radius:4px;opacity:0.85;transition:width 0.6s"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── TASK ADD ───
+function addTask() {
+  const text = prompt('New task description:');
+  if(!text) return;
+  const list = document.getElementById('task-list-a');
+  const div = document.createElement('div');
+  div.className = 'checklist-item';
+  div.innerHTML = `<div class="check-box" onclick="toggleCheck(this)"></div><div class="check-text">${text}</div><span class="check-meta">New · Just added</span>`;
+  list.appendChild(div);
+  showToast('Task added!');
+}
+
+// Init
+renderBudgetBars();
+
+// Current date in header
+document.querySelector('.topbar-sub').textContent = `— SRJ Group, Bengaluru · ${new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}`;
+</script>
+</body>
+</html>
